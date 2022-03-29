@@ -142,3 +142,29 @@ Vue 将被侦听的数组的变更方法进行了包裹(重写），所以它们
 - key属性主要用在Vue的虚拟DOM算法，在新旧nodes对比时辨识VNodes；
 - 如果不使用key，Vue会使用一种最大限度减少动态元素并且尽可能的尝试就地修改/复用相同类型元素的算法
 - 而使用key时，它会基于key的变化重新排列元素顺序，并且会移除/销毁key不存在的元素
+
+### computed 和methods区别
+
+- 计算属性有缓存，多次使用只执行一次
+- 如果计算属性要被修改，那必须写set函数去响应修改，且set中要引起计算时依赖的数据发生改变
+
+### computed和watch之间的区别
+
+- computed能完成的功能，watch都可以完成
+- watch能完成的功能，computed不一定能完成，例如：watch可以进行异步操作
+
+### v-model 收集表单数据
+
+- <input type="text"/>，则v-model收集的是value值，用户输入的就是value值
+- <input type="radio"/>，则v-model收集的是value值，且要给标签配置value值。
+- <input type="checkbox"/>
+  - 没有配置input的value属性，那么收集的就是checked（勾选 or 未勾选，是布尔值）
+  - 配置input的value属性
+    - v-model的初始值是非数组，那么收集的就是checked（勾选 or 未勾选，是布尔值）
+    - v-model的初始值是数组，那么收集的的就是value组成的数组
+
+v-model的三个修饰符：
+
+- lazy：失去焦点再收集数据
+- number：输入字符串转为有效的数字
+- trim：输入首尾空格过滤
