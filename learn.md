@@ -168,3 +168,308 @@ v-model的三个修饰符：
 - lazy：失去焦点再收集数据
 - number：输入字符串转为有效的数字
 - trim：输入首尾空格过滤
+
+### 组件通信
+
+#### 父子组件之间通信的方式
+
+- 父组件传递给子组件：通过props属性
+
+- 子组件传递给父组件：通过$emit触发事件
+
+  - vue3 里面需要对emit进行注册 
+
+    ```vue
+    emits: {
+          add: null,
+          sub: null,
+          addN: (num, name, age) => {
+            if (num > 10) {
+              return true
+            }
+            return false;
+          }
+        },
+    ```
+
+    
+
+- 禁用Attribute继承和多根节点
+
+  - 如果我们不希望组件的根元素继承attribute，可以在组件中设置 inheritAttrs: false
+
+    ```vue
+    <h2 v-bind="$attrs">{{title}}</h2>
+    <h2 :class="$attrs.class">{{title}}</h2>
+    ```
+
+  - 多个根节点的attribute(多个根节点的attribute如果没有显示的绑定，那么会报警告，我们必须手动的指定要绑定到哪一个属性上：)
+
+    ```vue
+    <template>
+      <h2>MultiRootElement</h2>
+      <h2>MultiRootElement</h2>
+      <h2 :id="$attrs.id">MultiRootElement</h2>
+    </template>
+    ```
+
+#### 非父子组件的通信
+
+- Provide/Inject
+  - Provide/Inject用于非父子组件之间共享数据
+- Mitt全局事件总线（vue3 移除了vue实例 事件总线）
+
+### 插槽 slot
+
+- 基本使用
+
+  ```vue
+    <div>
+      <h2>组件开始</h2>
+      <slot>
+        <i>我是默认的i元素</i>
+      </slot>
+      <h2>组件结束</h2>
+    </div>
+  ```
+
+- 具名插槽的使用
+
+  ```vue
+  <template>
+    <div class="nav-bar">
+      <!-- <slot name="default"></slot> -->
+      <div class="left">
+        <slot name="left"></slot>
+      </div>
+      <div class="center">
+        <slot name="center"></slot>
+      </div>
+      <div class="right">
+        <slot name="right"></slot>
+      </div>
+        <!-- 动态插槽 -->
+      <div class="addition"> 
+        <slot :name="name"></slot>
+      </div>
+    </div>
+  </template>
+  ```
+
+  动态插槽
+
+  v-slot:[dynamicSlotName]  
+
+  父组件使用
+
+  ```vue
+  <template>
+    <div>
+      <nav-bar :name="name">
+        <template #left>
+          <button>左边的按钮</button>
+        </template>
+        <template #center>
+          <h2>我是标题</h2>
+        </template>
+        <template #right>
+          <i>右边的i元素</i>
+        </template>
+        <template #[name]>
+          <i>why内容</i>
+        </template>
+      </nav-bar>
+    </div>
+  </template>
+  ```
+
+  slot缩写
+
+  **(v-slot:) 替换为字符 #**
+
+- 作用域插槽
+
+  ```vue
+  <template>
+    <div>
+      <template v-for="(item, index) in names" :key="item">
+        <slot :item="item" :index="index"></slot>
+      </template>
+    </div>
+  </template>
+  
+  <!-- 使用 -->
+  <show-names :names="names">
+    <template v-slot="coderwhy">
+      <button>{{coderwhy.item}}-{{coderwhy.index}}</button>
+    </template>
+  </show-names>
+  ```
+
+
+### 动态组件
+
+动态组件是使用 component 组件，通过一个特殊的attribute is 来实现
+
+```vue
+<component :is="currentTab"
+  name="skye"
+  :age="18"
+  @pageClick="pageClick">
+</component>
+```
+
+currentTab的值
+- 通过component函数注册的组件
+- 组件对象的components对象中注册的组件
+
+## webpack
+
+```js
+const path = require('path');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { DefinePlugin } = require("webpack");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader/dist/index');
+module.exports = {
+  target: "web",
+  // 设置模式
+  // development 开发阶段, 会设置development
+  // production 准备打包上线的时候, 设置production
+  mode: "development",
+  // 设置source-map, 建立js映射文件, 方便调试代码和错误
+  devtool: "source-map",
+  entry: "./src/main.js",
+  output: {
+    path: path.resolve(__dirname, "./build"),
+    filename: "js/bundle.js",
+  },
+  devServer: {
+    // contentBase: "./public", // 已经弃用
+    static: { // 打包的资源没有时， 从这里获取
+      directory: path.join(__dirname, './public'),
+    },
+    hot: true, // 模块热替换
+    // host: "0.0.0.0",
+    port: 5000,
+    open: true,
+    // compress: true,   // 压缩 是否为静态文件开启gzip
+    proxy: {
+      "/api": {
+        target: "http://localhost:8888",
+        pathRewrite: {
+          "^/api": ""
+        },
+        secure: false, // 默认情况下不接收转发到https的服务器上，如果希望支持，可以设置为false
+        changeOrigin: true // 表示是否更新代理后请求的headers中host地址
+      }
+    }
+  },
+  resolve: {
+    extensions: [".js", ".json", ".mjs", ".vue", ".ts", ".jsx", ".tsx"],
+    alias: { // 添加别名
+      "@": path.resolve(__dirname, "./src"),
+      "js": path.resolve(__dirname, "./src/js")
+    }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/, 
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require("autoprefixer")
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          "style-loader",
+          "css-loader",
+          "less-loader"
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        type: "asset",
+        generator: {
+          filename: "img/[name]_[hash:6][ext]"
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 20 * 1024
+          }
+        }
+      },
+      {
+        test: /\.(eot|ttf|woff2?)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "font/[name]_[hash:6][ext]"
+        }
+      },
+      //  不单独使用babel.config.js外部配置
+      // {
+      //   test: /\.js$/,
+      //   use: {
+      //     loader: "babel-loader",
+      //     options: {
+      //       // plugins: [
+      //       //   "@babel/plugin-transform-arrow-functions",
+      //       //   "@babel/plugin-transform-block-scoping",
+      //       // ]
+      //       presets: [
+      //         "@babel/preset-env"
+      //       ]
+      //     }
+      //   }
+      // }
+      {
+        test: /\.js$/,
+        loader: "babel-loader"
+      },
+      {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+      title: "test"
+    }),
+    new DefinePlugin({
+      BASE_URL: "'./'",
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false
+    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     {
+    //       from: "public",
+    //       to: "./", // 可以不写
+    //       globOptions: { // 忽略文件
+    //         ignore: [
+    //           "**/index.html"
+    //         ]
+    //       }
+    //     }
+    //   ]
+    // }),
+    new VueLoaderPlugin()
+  ]
+}
+```
