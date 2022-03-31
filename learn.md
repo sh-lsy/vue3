@@ -439,7 +439,61 @@ export default {
 <my-input-vue v-model="msg" v-model:title="title" />
 ```
 
+### 动画
 
+#### transition
+
+Vue 提供了 transition 的封装组件
+
+过渡动画class
+
+- v-enter-from
+- v-enter-active
+- v-enter-to
+- v-leave-from
+- v-leave-active
+- v-leave-to
+
+显示的指定动画时间    **通过 duration 属性**
+
+过渡的模式mode
+
+- in-out: 新元素先进行过渡，完成之后当前元素过渡离开
+- out-in: 当前元素先进行过渡，完成之后新元素过渡进入
+
+appear初次渲染
+
+可以通过以下 attribute 来自定义过渡类名：
+
+- enter-from-class
+- enter-active-class
+- enter-to-class
+- leave-from-class
+- leave-active-class
+- leave-to-class
+
+transition组件给我们提供的JavaScript钩子
+
+- beforeEnter
+- enter
+- afterEnter
+- beforeLeave
+- leave
+- afterLeave
+
+#### 列表的过渡
+
+使用<transition-group>组件
+
+- 默认情况下，它不会渲染一个元素的包裹器，但是你可以指定一个元素并以 tag attribute 进行渲染
+- 过渡模式不可用，因为我们不再相互切换特有的元素
+- 过渡模式不可用，因为我们不再相互切换特有的元素
+- CSS 过渡的类将会应用在内部的元素中，而不是这个组/容器本身
+
+第三方css库
+
+- animate.css
+- gsap
 
 ## webpack
 
