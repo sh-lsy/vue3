@@ -323,6 +323,124 @@ currentTab的值
 - 通过component函数注册的组件
 - 组件对象的components对象中注册的组件
 
+### keep-alive
+
+keep-alive有一些属性
+
+- include - string | RegExp | Array。只有名称匹配的组件会被缓存
+- exclude - string | RegExp | Array。任何名称匹配的组件都不会被缓存
+- max - number | string。最多可以缓存多少组件实例，一旦达到这个数字，那么缓存组件中最近没有被访问的实例会被销毁
+
+对于缓存的组件来说，再次进入时，我们是不会执行created或者mounted等生命周期函数的
+
+- activated 进入
+- deactivated 离开
+
+### 异步组件
+
+**defineAsyncComponent**
+
+```vue
+import { defineAsyncComponent } from 'vue';
+const AsyncCategory = defineAsyncComponent(() => import("./AsyncCategory.vue"))
+export default {
+    components: {
+      AsyncCategory,
+    }
+  }
+```
+
+也可后面跟对象
+
+```vue
+const AsyncCategory = defineAsyncComponent({
+	loader: () => import("./AsyncCategory.vue"),
+  // 加载过程显示的组件（自定义 loading）
+  loadingComponent: Loading,
+  // 加载失败时显示的组件
+  errorComponent: Error,
+  // 在loadingComponent的延迟 |默认值 200ms
+  delay: 1000,
+  // 定义组件是否可挂起， 默认为true
+  suspensible: true
+})
+```
+
+### $refs的使用
+
+直接获取到元素对象或者子组件实例
+
+### $parent和$root
+
+### 在Vue3中已经移除了$children的属性，
+
+### 生命周期
+
+- beforeCreate
+- created
+- beforeMount
+- mounted
+- beforeUnmount
+- unmounted
+- beforeUpdate
+- updated
+
+### 组件v-model的实现
+
+- 其 value attribute 绑定到一个名叫 modelValue 的 prop 上
+- 新的值通过自定义的 update:modelValue 事件抛出
+
+多个v-model
+
+```vue
+<template>
+  <div>
+    <input type="text" v-model="myvalue">
+    <input type="text" v-model="myTitle">
+  </div>
+</template>
+<script>
+export default {
+  props: {
+    modelValue: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    myvalue: {
+      get() {
+        return this.modelValue
+      },
+      set(value) {
+        this.$emit('update:modelValue', value)
+      }
+    },
+    myTitle: {
+      get() {
+        return this.title
+      },
+      set(value) {
+        this.$emit('update:title', value)
+      }
+    }
+  }
+}
+</script>
+```
+
+使用
+
+```vue
+<my-input-vue v-model="msg" v-model:title="title" />
+```
+
+
+
 ## webpack
 
 ```js
