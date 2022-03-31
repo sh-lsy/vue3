@@ -495,6 +495,203 @@ transition组件给我们提供的JavaScript钩子
 - animate.css
 - gsap
 
+## composition api
+
+### setup函数
+
+主要有两个参数
+
+- 第一个参数：props
+- 第二个参数：context  包含以下属性
+  - attrs：所有的非prop的attribute；
+  - slots：父组件传递过来的插槽
+  - emit：当我们组件内部需要发出事件时会用到emit
+
+setup函数的返回值 ：setup的返回值可以在模板template中被使用
+
+setup不可以使用this
+
+- this并没有指向当前组件实例
+- 在setup被调用之前，data、computed、methods等都没有被解析；
+
+### Reactive
+
+传入的是一个对象或者数组类型：
+
+### Ref
+
+在模板中引入ref的值时，Vue会自动帮助我们进行解包操作，所以我们并不需要在模板中通过 ref.value 的方式来使用(浅解析)
+
+### readonly
+
+readonly会返回原生对象的只读代理（也就是它依然是一个Proxy，这是一个proxy的set方法被劫持，并且不 能对其进行修改）
+
+### Reactive判断的API
+
+- isProxy
+  - 检查对象是否是由 reactive 或 readonly创建的 proxy。
+- isReactive
+  - 检查对象是否是由 reactive创建的响应式代理
+  - 如果该代理是 readonly 建的，但包裹了由 reactive 创建的另一个代理，它也会返回 true
+- isReadonly
+  - 检查对象是否是由 readonly 创建的只读代理。
+- toRaw
+  - 返回 reactive 或 readonly 代理的原始对象（不建议保留对原始对象的持久引用。请谨慎使用）
+- shallowReactive
+  - 创建一个响应式代理，它跟踪其自身 property 的响应性，但不执行嵌套对象的深层响应式转换 (深层还是原生对象)
+- shallowReadonly
+  - 创建一个 proxy，使其自身的 property 为只读，但不执行嵌套对象的深度只读转换（深层还是可读、可写的）。
+
+### toRefs
+
+如果我们使用ES6的解构语法，对reactive返回的对象进行解构获取值，那么之后无论是修改结构后的变量，还是修改reactive 返回的state对象，数据都不再是响应式的
+
+```vue
+const info = reactive({name: "why", age: 18})
+let { name, age } = toRefs(info)
+```
+
+### toRef
+
+如果我们只希望转换一个reactive对象中的属性为ref, 那么可以使用toRef的方法
+
+```vue
+ let age = toRef(info, "age");
+```
+
+### ref其他的API
+
+- unref
+  - 如果参数是一个 ref，则返回内部值，否则返回参数本身
+  - val = isRef(val) ? val.value : val 的语法糖函数
+- isRef
+  - 判断值是否是一个ref对象
+- shallowRef
+  - 创建一个浅层的ref对象
+- triggerRef
+  - 手动触发和 shallowRef 相关联的副作用
+
+### customRef
+
+创建一个自定义的ref，并对其依赖项跟踪和更新触发进行显示控制
+
+- 需要一个工厂函数，该函数接受 track 和 trigger 函数作为参数
+- 返回一个带有 get 和 set 的对象；
+
+```vue
+import { customRef } from 'vue';
+
+// 自定义ref
+export default function(value, delay = 300) {
+  let timer = null;
+  return customRef((track, trigger) => {
+    return {
+      get() {
+        track();
+        return value;
+      },
+      set(newValue) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          value = newValue;
+          trigger();
+        }, delay);
+      }
+    }
+  })
+}
+```
+
+### computed
+
+- 接收一个getter函数，并为 getter 函数返回的值，返回一个不变的 ref 对象
+- 接收一个具有 get 和 set 的对象，返回一个可变的（可读写）ref 对象
+
+### watchEffect
+
+- watchEffect传入的函数会被立即执行一次，并且在执行的过程中会收集依赖
+- 只有收集的依赖发生变化时，watchEffect传入的函数才会再次执行
+
+watchEffect的停止侦听
+
+- 获取watchEffect的返回值函数，调用该函数即可
+
+watchEffect清除副作用
+
+- 给watchEffect传入的函数被回调时，其实可以获取到一个参数：onInvalidate
+
+  ```vue
+  const stop = watchEffect((onInvalidate) => {
+          const timer = setTimeout(() => {
+            console.log("网络请求成功~");
+          }, 2000)
+  
+          // 根据name和age两个变量发送网络请求
+          onInvalidate(() => {
+            // 在这个函数中清除额外的副作用
+            // request.cancel()
+            clearTimeout(timer);
+            console.log("onInvalidate");
+          })
+          console.log("name:", name.value, "age:", age.value);
+        });
+  ```
+
+  **setup中使用ref**
+
+```vue
+<template>
+  <div>
+    <h2 ref="el">{{ msg }}</h2>
+  </div>
+</template>
+<script>
+import { ref, watchEffect } from "vue"
+export default {
+  setup() {
+    const msg = ref('watch msg')
+    const el = ref(null)
+    watchEffect(() => {
+      console.log(el.value)
+    }, {
+        flush: "post"
+    })
+
+    return {
+      msg,
+      el,
+    }
+  }
+}
+</script>
+```
+
+### Watch的使用
+
+- 侦听watch时,传入一个getter函数
+
+- 传入一个可响应式对象: reactive对象/ref对象
+
+  - reactive对象获取到的newValue和oldValue本身都是reactive对象
+
+    - 如果希望newValue和oldValue是一个普通的对象
+
+      ```js
+      watch(() => ({...person}), (val, oldVal) => {
+        console.log("val:", val, "oldVal",oldVal);
+      })
+      ```
+
+      
+
+  - ref对象获取newValue和oldValue是value值的本身
+
+- watch 传入ractive对象 默认开启deep
+
+  - watch第三个参数可以开启immediate， deep
+
+
+
 ## webpack
 
 ```js
