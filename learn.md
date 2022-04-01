@@ -690,6 +690,53 @@ export default {
 
   - watch第三个参数可以开启immediate， deep
 
+### 生命钩子函数
+
+以使用直接导入的 onX 函数注册生命周期钩子
+
+- onBeforeMount
+- onMounted
+- onBeforeUnmount
+- onUnmounted
+- onBeforeUpdate
+- onUpdated
+- onActivated 
+- onDeactivated  
+
+### h函数
+
+```VUE
+<script>
+  import { h } from 'vue';
+
+  export default {
+    render() {
+      return h("h2", {class: "title"}, "Hello Render")
+    }
+  }
+</script>
+```
+
+### 自定义指令
+
+directives
+
+```VUE
+<script>
+  export default {
+    // 局部指令
+    directives: {
+      focus: {
+        mounted(el, bindings, vnode, preVnode) {
+          console.log("focus mounted");
+          el.focus();
+        }
+      }
+    }
+  }
+</script>
+```
+
 
 
 ## webpack
