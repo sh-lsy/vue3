@@ -737,7 +737,33 @@ directives
 </script>
 ```
 
+### teleport
 
+- Vue提供的内置组件， 类似于react的Portals
+- 有两个属性
+  - to：指定将其中的内容移动到的目标元素，可以使用选择器
+  - disabled：是否禁用 teleport 的功能
+
+## vue实现原理相关
+
+### 简洁版的Mini-Vue框架，该Vue包括三个模块
+
+- 渲染系统模块
+- 可响应式系统模块
+- 应用程序入口模块
+
+## vue-router
+
+### router-link
+
+- to属性 
+  - 是一个字符串，或者是一个对象
+- replace属性
+  - 设置 replace 属性的话，当点击时，会调用 router.replace()，而不是 router.push()
+- active-class属性
+  - 设置激活a元素后应用的class，默认是router-link-active
+- exact-active-class属性
+  - 链接精准激活时，应用于渲染的  的 class，默认是router-link-exact-active
 
 ## webpack
 
