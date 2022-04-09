@@ -765,6 +765,72 @@ directives
 - exact-active-class属性
   - 链接精准激活时，应用于渲染的  的 class，默认是router-link-exact-active
 
+### 路由懒加载
+
+Vue Router默认就支持动态来导入组件
+
+```js
+{
+    name: 'home',
+    path: '/home',
+    component: () => import(/* webpackChunkName: "home-chunk" */"../views/home")
+},
+```
+
+### 动态路由基本匹配
+
+配置
+
+```js
+  {
+    name: 'goods',
+    path: '/goods/:goodsName/id/:id', // 可以多个
+    component: () => import("../views/goods")
+  },
+```
+
+使用
+
+```vue
+<router-link to="/goods/goods1212/id/2333">goods</router-link>
+```
+
+### NotFound
+
+配置
+
+```js
+  {
+    path: "/:pathMatch(.*)",
+    component: () => import("../views/notFound")
+  }
+```
+
+- 可以通过$route.params.pathMatch
+- 匹配规则加*
+  - 可以解析传入的参数
+
+### 路由的嵌套
+
+- // 嵌套路由path加/  将不会/home/homeMessage显示
+
+### router-link的v-slot
+
+- 使用custom表示我们整个元素要自定义（不使用 包裹在a标签里面）
+
+- ```vue
+  <router-link to="/goods" custom  v-slot="props">
+        <button>goods</button>
+        <button @click="props.navigate">goods{{ props.href }}</button>
+  </router-link>
+  ```
+
+  - href：解析后的 URL
+  - route：解析后的规范化的route对象
+  - navigate：触发导航的函数
+  - isActive：是否匹配的状态
+  - isExactActive：是否是精准匹配的状态
+
 ## webpack
 
 ```js
