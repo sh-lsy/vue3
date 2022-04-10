@@ -495,6 +495,10 @@ transition组件给我们提供的JavaScript钩子
 - animate.css
 - gsap
 
+### nexttick
+
+将回调推迟到下一个 DOM 更新周期之后执行
+
 ## composition api
 
 ### setup函数
@@ -913,9 +917,39 @@ router.beforeEach((to,from) => {
 - 触发 DOM 更新
 - 调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入
 
-## vuex
+## vuex（状态管理）
 
+- Vuex 使用单一状态树
+- 在setup中使用mapState
+  - 需要单独封装函数处理
 
+### getters
+
+- getters可以接收第二个参数
+- getters中的函数本身，可以返回一个函数，那么在使用的地方相当于可以调用这个函数
+- mapGetters
+
+### mutation
+
+更改 Vuex 的 store 中的状态的唯一方法是提交 mutation
+
+- mapMutations
+
+注意： mutation 必须是同步函数
+
+### actions
+
+- action提交的是mutation，而不是直接变更状态
+- action可以包含任意异步操作
+- actions的异步操作
+  - 可以通过让action返回Promise，在Promise的then中来处理完成后的操作
+
+### module
+
+- module的命名空间
+  - 可以添加 namespaced: true 的方式使其成为带命名空间的模块
+  - 当模块被注册后，它的所有 getter、action 及 mutation 都会自动根据模块注册的路径调整命名
+- createNamespacedHelpers
 
 ## webpack
 
