@@ -831,6 +831,92 @@ Vue Router默认就支持动态来导入组件
   - isActive：是否匹配的状态
   - isExactActive：是否是精准匹配的状态
 
+### router-view的v-slot
+
+- router-view也提供给我们一个插槽，可以用于<transition>和<keep-alive>组件来包裹你的路由组件：
+  - Component：要渲染的组件
+  - route：解析出的标准化路由对象
+
+```vue
+<router-view v-slot="props">
+    <transition name="n">
+        <keep-alive>
+            <component :is="props.Component"></component>
+        </keep-alive>
+    </transition>
+</router-view>
+```
+
+### 动态添加路由
+
+```js
+// 动态添加路由
+router.addRoute({
+  path: '/moment',
+  name: 'moment',
+  component: () => import('../views/moment')
+})
+// 添加二级路由对象
+
+router.addRoute("home", {
+  path: "homeMoment",
+  name: 'homeMoment',
+  component: () => import("../views/homeMoment")
+})
+```
+
+### 动态删除路由
+
+- 方式一：添加一个name相同的路由
+- 方式二：通过removeRoute方法，传入路由的名称
+- 方式三：通过addRoute方法的返回值回调
+
+### 路由导航守卫
+
+- 全局的前置守卫beforeEach是在导航触发时会被回调的
+
+```js
+// to: Route对象, 即将跳转到的Route对象
+// from: Route对象, 
+/**
+ * 返回值问题:
+ *    1.false: 不进行导航
+ *    2.undefined或者不写返回值: 进行默认导航
+ *    3.字符串: 路径, 跳转到对应的路径中
+ *    4.对象: 类似于 router.push({path: "/login", query: ....})
+ */
+
+router.beforeEach((to,from) => {
+  console.log(to);
+  if (to.path !== "/login") {
+    if(!window.sessionStorage.getItem("token")){
+      return "/login"
+    }
+  }
+})
+```
+
+在Vue3中我们是通过返回值来控制的，不再推荐使用next函数，这是因为开发中很容易调用多次next
+
+### 完整的导航解析流程
+
+- 导航被触发
+- 在失活的组件里调用 beforeRouteLeave 守卫
+- 调用全局的 beforeEach 守卫
+- 在重用的组件里调用 beforeRouteUpdate 守卫(2.2+)
+- 在路由配置里调用 beforeEnter
+- 解析异步路由组件
+- 在被激活的组件里调用 beforeRouteEnter
+- 调用全局的 beforeResolve 守卫(2.5+)
+- 导航被确认
+- 调用全局的 afterEach 钩子
+- 触发 DOM 更新
+- 调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入
+
+## vuex
+
+
+
 ## webpack
 
 ```js
