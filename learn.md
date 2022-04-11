@@ -1101,3 +1101,144 @@ module.exports = {
   ]
 }
 ```
+
+## 代码规范
+
+### 集成editorconfig配置
+
+```
+# http://editorconfig.org
+
+root = true
+
+[*] # 表示所有文件适用
+charset = utf-8 # 设置文件字符集为 utf-8
+indent_style = space # 缩进风格（tab | space）
+indent_size = 2 # 缩进大小
+end_of_line = lf # 控制换行类型(lf | cr | crlf)
+trim_trailing_whitespace = true # 去除行首的任意空白字符
+insert_final_newline = true # 始终在文件末尾插入一个新行
+
+[*.md] # 表示仅 md 文件适用以下规则
+max_line_length = off
+trim_trailing_whitespace = false
+
+```
+
+VSCode需要安装一个插件：EditorConfig for VS Code
+
+### prettier
+
+- npm install prettier -D
+
+- 配置.prettierrc文件
+
+  - useTabs：使用tab缩进还是空格缩进，选择false；
+  - tabWidth：tab是空格的情况下，是几个空格，选择2个；
+  - printWidth：当行字符的长度，推荐80，也有人喜欢100或者120；
+  - singleQuote：使用单引号还是双引号，选择true，使用单引号；
+  - trailingComma：在多行输入的尾逗号是否添加，设置为 `none`；
+  - semi：语句末尾是否要加分号，默认值true，选择false表示不加；
+
+- ```json
+  {
+    "useTabs": false,
+    "tabWidth": 2,
+    "printWidth": 100,
+    "singleQuote": false,
+    "trailingComma": "none",
+    "semi": true
+  }
+  ```
+
+- 创建.prettierignore忽略文件
+
+  ```
+  /dist/*
+  .local
+  .output.js
+  /node_modules/**
+  
+  **/*.svg
+  **/*.sh
+  
+  /public/*
+  
+  ```
+
+  VSCode需要安装prettier的插件
+
+  prettier  vscode配置
+
+  - 先设定自动保存文件，搜索框贴入files.autoSave筛出设置项，并把设置项属性选择为onFocuschange
+  - 设定编辑器默认代码格式化（美化）的插件为Prettier，同理在搜索设置框贴入editor.defaultFormatter，将配置项选择为Prettier
+  - 设定Prettier插件保存时自动格式化代码，搜索设置项贴入editor.formatOnSave，将如下图所示的选项框打钩即可
+
+- 在package.json中配置一个scripts
+
+  ```"prettier": "prettier --write ."```
+
+###  使用ESLint检测
+
+- VSCode需要安装ESLint插件
+- 解决eslint和prettier冲突的问题
+  - npm i eslint-plugin-prettier eslint-config-prettier -D
+  - eslint配置文件中加入"plugin:prettier/recommended"
+
+### git Husky和eslint
+
+``` npx husky-init && npm install```
+
+### git commit规范
+
+- 安装Commitizen
+
+  - ```npm install commitizen -D```
+
+- 安装cz-conventional-changelog，并且初始化cz-conventional-changelog
+
+  - ```npx commitizen init cz-conventional-changelog --save-dev --save-exact```
+
+- 提交代码需要使用 `npx cz`
+
+  * 第一步是选择type，本次更新的类型
+
+  | Type     | 作用                                                         |
+  | -------- | ------------------------------------------------------------ |
+  | feat     | 新增特性 (feature)                                           |
+  | fix      | 修复 Bug(bug fix)                                            |
+  | docs     | 修改文档 (documentation)                                     |
+  | style    | 代码格式修改(white-space, formatting, missing semi colons, etc) |
+  | refactor | 代码重构(refactor)                                           |
+  | perf     | 改善性能(A code change that improves performance)            |
+  | test     | 测试(when adding missing tests)                              |
+  | build    | 变更项目构建或外部依赖（例如 scopes: webpack、gulp、npm 等） |
+  | ci       | 更改持续集成软件的配置文件和 package 中的 scripts 命令，例如 scopes: Travis, Circle 等 |
+  | chore    | 变更构建流程或辅助工具(比如更改测试环境)                     |
+  | revert   | 代码回退                                                     |
+
+  - 第二步选择本次修改的范围（作用域）
+  - 第三步选择提交的信息
+  - 第四步提交详细的描述信息
+  - 第五步是否是一次重大的更改
+  - 第六步是否影响某个open issue
+
+- 可以在scripts中构建一个命令来执行 cz
+
+#### 代码提交验证
+
+- 安装 @commitlint/config-conventional 和 @commitlint/cli
+
+  - ```npm i @commitlint/config-conventional @commitlint/cli -D```
+
+- 在根目录创建commitlint.config.js文件，配置commitlint
+
+  - ```js
+    module.exports = {
+      extends: ['@commitlint/config-conventional']
+    }
+    ```
+
+- 使用husky生成commit-msg文件，验证提交信息
+
+  - ```npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"```
