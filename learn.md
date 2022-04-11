@@ -495,7 +495,7 @@ transition组件给我们提供的JavaScript钩子
 - animate.css
 - gsap
 
-### nexttick
+### nexttick（微任务）
 
 将回调推迟到下一个 DOM 更新周期之后执行
 
