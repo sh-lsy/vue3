@@ -10,6 +10,7 @@
     <el-button>中文</el-button>
     <el-color-picker v-model="color" show-alpha />
     <el-icon><alarm-clock /></el-icon>
+    <el-icon><circle-check-filled /></el-icon>
     <el-switch v-model="value1" />
   </div>
 </template>
