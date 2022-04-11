@@ -1,4 +1,7 @@
+
+
 ## VUE基础
+
 ### v-bind
 
 缩写 :
@@ -1242,3 +1245,74 @@ VSCode需要安装一个插件：EditorConfig for VS Code
 - 使用husky生成commit-msg文件，验证提交信息
 
   - ```npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"```
+
+## 配置element-plus
+
+- ```
+  npm install element-plus --save
+  ```
+
+- 引入
+
+  - 全局
+
+  - ```
+    import ElementPlus from "element-plus";
+    import "element-plus/dist/index.css";
+    ```
+
+  - 按需导入
+
+    - 自动导入
+
+    - 首先你需要安装`unplugin-vue-components` 和 `unplugin-auto-import`这两款插件
+
+    - ```
+      npm install -D unplugin-vue-components unplugin-auto-import
+      ```
+
+    - vue.config.js 配置
+
+    - ```js
+      configureWebpack: {
+          plugins: [
+            AutoImport({
+              resolvers: [ElementPlusResolver()]
+            }),
+            Components({
+              resolvers: [ElementPlusResolver()]
+            })
+          ]
+        }
+      ```
+
+### 配置element-plus/icons-vue
+
+- 安装```npm install @element-plus/icons-vue```
+
+- 定义全局引入
+
+- ```typescript
+  import { App } from "vue";
+  import * as ElIcons from "@element-plus/icons-vue";
+  
+  export default function (app: App): void {
+    for (const name in ElIcons) {
+      app.component(name, (ElIcons as any)[name]);
+    }
+  }
+  
+  ```
+
+- ```typescript
+  //index.ts
+  import { App } from "vue";
+  import elementIcons from "./elementIcons";
+  
+  export function globalRegister(app: App): void {
+    app.use(elementIcons);
+  }
+  ```
+
+- main.ts 引入index.ts 进行use
+

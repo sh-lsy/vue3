@@ -1,4 +1,4 @@
-# vue3-ts-elemenetui
+# vue3-ts
 
 ## Project setup
 
