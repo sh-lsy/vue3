@@ -7,9 +7,9 @@ let BASE_URL = ""
 const TIME_OUT = 5000 // 超时时间
 
 if (process.env.NODE_ENV === "development") {
-  BASE_URL = "http://123.207.32.32:8000/"
+  BASE_URL = "/api"
 } else if (process.env.NODE_ENV === "production") {
-  BASE_URL = "http://localhost:8080"
+  BASE_URL = "http://152.136.185.210:4000/"
 } else {
   BASE_URL = "http://localhost:8080"
 }

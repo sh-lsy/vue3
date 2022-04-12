@@ -1,13 +1,13 @@
 import AxiosRequest from "./request"
 import { BASE_URL, TIME_OUT } from "./url"
-
+import localStorage from "@/utils/cache"
 const Request = new AxiosRequest({
   baseURL: BASE_URL,
   timeout: TIME_OUT,
   interceptors: {
     requestInterceptor: (config) => {
       // 携带token的拦截
-      const token = sessionStorage.getItem("accessToken")
+      const token = localStorage.getItem("token")
       if (token) {
         config.headers!.Authorization = token
       }

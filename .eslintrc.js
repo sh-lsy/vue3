@@ -23,6 +23,7 @@ module.exports = {
     ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "linebreak-style": [0, "error", "windows"]
+    "linebreak-style": [0, "error", "windows"],
+    "vue/multi-word-component-names": 0
   }
 }
