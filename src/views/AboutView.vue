@@ -15,8 +15,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from "vue"
 
-const color = ref("rgba(19, 206, 102, 0.8)");
-const value1 = ref(true);
+const color = ref("rgba(19, 206, 102, 0.8)")
+const value1 = ref(true)
 </script>
