@@ -1,4 +1,4 @@
-# vue3-ts-elemenetui
+# vue3-ts
 
 ## vue3 无 ui 框架
 
