@@ -5,12 +5,12 @@
   </div>
 </template>
 <script lang="ts">
-import HelloWorldVue from "@/components/HelloWorld.vue";
+import HelloWorldVue from "@/components/HelloWorld.vue"
 export default {
   name: "homeViews",
   faga1: "2",
   components: {
     HelloWorldVue
   }
-};
+}
 </script>

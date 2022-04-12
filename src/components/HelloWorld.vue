@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from "vue"
 
 export default defineComponent({
   name: "HelloWorld",
@@ -102,10 +102,10 @@ export default defineComponent({
   },
   methods: {
     add() {
-      console.log(121);
+      console.log(121)
     }
   }
-});
+})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

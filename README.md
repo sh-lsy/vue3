@@ -1,6 +1,6 @@
 # vue3-ts-elemenetui
 
-## vue3无ui框架
+## vue3 无 ui 框架
 
 ## Project setup
 
