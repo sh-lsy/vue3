@@ -6,6 +6,7 @@ import { accountLoging, getUserInfoById, getUserMenusByRoleId } from "@/api/logi
 import { Account } from "@/api/login/types"
 
 import localStorage from "@/utils/cache"
+import { mapMenusToRoutes } from "@/utils/map-menus"
 
 import router from "@/router"
 import { ElMessage } from "element-plus"
@@ -26,6 +27,12 @@ const loginModule: Module<LoginState, RootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+      // 动态绑定路由
+      const routes = mapMenusToRoutes(userMenus)
+      // 将routes 加入main里面
+      routes.forEach((route) => {
+        router.addRoute("main", route)
+      })
     }
   },
   actions: {

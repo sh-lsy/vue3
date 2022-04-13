@@ -22,6 +22,7 @@ module.exports = {
         endOfLine: "auto"
       }
     ],
+    "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "linebreak-style": [0, "error", "windows"],

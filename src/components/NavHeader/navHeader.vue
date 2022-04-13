@@ -4,10 +4,13 @@
       <expand size="30" v-show="isFold" />
       <fold size="30" v-show="!isFold" />
     </el-icon>
+    <div style="position: absolute; left: -50px; top: -90px; transform: scale(0.2)"><coffee /></div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineEmits } from "vue"
+import { ref } from "vue"
+
+import coffee from "@/components/coffee/coffee.vue"
 const emit = defineEmits<{
   (e: "foldChange", num: boolean): void
 }>()
@@ -19,6 +22,7 @@ const foldClick = () => {
 </script>
 <style scoped lang="less">
 .nav-header {
+  position: relative;
   .fold-menu {
     font-size: 20px;
     cursor: pointer;
