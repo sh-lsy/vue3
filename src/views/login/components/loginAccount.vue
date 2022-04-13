@@ -2,16 +2,22 @@
   <div>
     <el-form ref="formRef" :rules="rules" :model="account">
       <el-form-item label="账号" prop="name">
-        <el-input type="text" v-model="account.name" />
+        <el-input type="text" v-model="account.name" placeholder="账号：coderwhy" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="account.password" autocomplete="off" show-password />
+        <el-input
+          type="password"
+          v-model="account.password"
+          autocomplete="off"
+          show-password
+          placeholder="密码：123456"
+        />
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive, ref, defineExpose } from "vue"
+import { reactive, ref } from "vue"
 import { useStore } from "vuex"
 
 import type { FormInstance } from "element-plus"

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, defineExpose } from "vue"
+import { reactive } from "vue"
 import { ElMessage } from "element-plus"
 const phone = reactive({
   num: "",

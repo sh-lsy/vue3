@@ -8,7 +8,7 @@ import { Account } from "@/api/login/types"
 import localStorage from "@/utils/cache"
 
 import router from "@/router"
-
+import { ElMessage } from "element-plus"
 const loginModule: Module<LoginState, RootState> = {
   namespaced: true,
   state: {
@@ -31,6 +31,16 @@ const loginModule: Module<LoginState, RootState> = {
   actions: {
     async accountLoginAction({ commit }, payload: Account) {
       const loginResult = await accountLoging(payload)
+      console.log(loginResult)
+      if (!loginResult) {
+        ElMessage.warning({
+          message: "账号：coderwhy 密码：123456",
+          center: true
+        })
+        localStorage.removeItem("name")
+        localStorage.removeItem("password")
+        return
+      }
       const { id, token } = loginResult.data
       commit("changeToken", token)
       localStorage.setItem("token", token)
@@ -44,7 +54,7 @@ const loginModule: Module<LoginState, RootState> = {
       const userMenus = userMenusResult.data
       commit("changeUserMenus", userMenus)
       localStorage.setItem("userMenus", userMenus)
-      router.push("/home")
+      router.push("/main")
     },
     loadLocalLogin({ commit }) {
       const token = localStorage.getItem("token")
