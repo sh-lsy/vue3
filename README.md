@@ -1,5 +1,5 @@
 # vue3-ts  
-# vue3 学习记录 笔记与learn.md
+# vue3 学习笔记记录在learn.md
 
 ## Project setup
 
