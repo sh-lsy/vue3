@@ -5,7 +5,7 @@
       <span v-if="!props.collapse" class="title">Vue3+TS</span>
     </div>
     <el-menu
-      default-active="39"
+      :default-active="defaultValue"
       :collapse="props.collapse"
       class="el-menu-vertical"
       background-color="#0c2135"
@@ -43,9 +43,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useStore } from "@/store"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
+
+import { pathMapToMenu } from "@/utils/map-menus"
+
 const store = useStore()
 const router = useRouter()
 interface Props {
@@ -54,10 +57,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   collapse: false
 })
+const route = useRoute()
+const currentPath = route.path
 const userMenus = computed(() => store.state.login.userMenus)
-
+const menu = pathMapToMenu(userMenus.value, currentPath)
+const defaultValue = ref(menu.id + "")
 const handleMenuItemClick = (item: any) => {
-  console.log("--------")
   router.push({
     path: item.url ?? "/not-found"
   })

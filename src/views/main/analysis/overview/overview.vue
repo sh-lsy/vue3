@@ -3,7 +3,7 @@
     <el-row :gutter="12">
       <el-col :span="24">
         <el-card shadow="always">
-          基于 Vue3、Vuex、VueRouter、Vite、 ElementPlus 、TypeScript、Echart5
+          基于 Vue3、Vuex、VueRouter、 ElementPlus 、TypeScript、Echart5
         </el-card>
       </el-col>
     </el-row>

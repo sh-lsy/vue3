@@ -26,13 +26,16 @@
       <el-link type="primary">忘记密码</el-link>
     </div>
     <el-button type="primary" class="login-btn" @click="handleLoginClick">立即登录</el-button>
+    <div class="my-ball">
+      <ball />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue"
 import loginAccount from "./loginAccount.vue"
 import loginPhone from "./loginPhone.vue"
-
+import ball from "@/components/ball"
 const isKeepPassword = ref(true)
 const accountRef = ref<InstanceType<typeof loginAccount>>()
 const phoneRef = ref<InstanceType<typeof loginPhone>>()
@@ -50,6 +53,8 @@ const handleLoginClick = () => {
 .login-panel {
   margin-bottom: 150px;
   min-width: 350px;
+  position: relative;
+  z-index: 999;
 
   .title {
     text-align: center;
@@ -68,5 +73,11 @@ const handleLoginClick = () => {
 }
 :deep(.el-icon) {
   vertical-align: -2px;
+}
+.my-ball {
+  position: absolute;
+  left: -300px;
+  top: 0;
+  z-index: -1;
 }
 </style>
