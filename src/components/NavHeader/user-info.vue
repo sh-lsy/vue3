@@ -10,7 +10,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item :icon="CircleClose">退出登录</el-dropdown-item>
+          <el-dropdown-item :icon="CircleClose" @click="loginout">退出登录</el-dropdown-item>
           <el-dropdown-item divided>用户信息</el-dropdown-item>
           <el-dropdown-item>系统管理</el-dropdown-item>
         </el-dropdown-menu>
@@ -23,8 +23,16 @@
 import { computed } from "vue"
 import { useStore } from "@/store"
 import { CircleClose } from "@element-plus/icons-vue"
+import { useRouter } from "vue-router"
+import localStorage from "@/utils/cache"
+
 const store = useStore()
 const name = computed(() => store.state.login.userInfo.name)
+const Router = useRouter()
+const loginout = () => {
+  localStorage.clear()
+  Router.replace("/login")
+}
 </script>
 
 <style scoped>
