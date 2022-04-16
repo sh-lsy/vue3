@@ -1,18 +1,13 @@
 <template>
   <div class="user">
-    <h2>user</h2>
+    <SFrom v-bind="searchFormConfig" />
+    <div class="content"></div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "user",
-  setup() {
-    return {}
-  }
-})
+<script lang="ts" setup>
+import SFrom from "@/components/Form"
+import { searchFormConfig } from "./config/search.config"
 </script>
 
 <style scoped></style>
