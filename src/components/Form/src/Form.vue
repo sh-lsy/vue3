@@ -1,8 +1,11 @@
 <template>
   <div class="search-form">
+    <div class="header">
+      <slot name="header"></slot>
+    </div>
     <el-form :label-width="labelWidth">
       <el-row>
-        <template v-for="item in formItems" :key="item.label">
+        <template v-for="item in props.formItems" :key="item.label">
           <el-col v-bind="colLayout">
             <el-form-item :label="item.label" :rules="item.rules" :style="itemLayout">
               <template v-if="item.type === 'input' || item.type === 'password'">
@@ -10,6 +13,7 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
+                  v-model="formData[`${item.field}`]"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -17,6 +21,7 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   style="width: 100%"
+                  v-model="formData[`${item.field}`]"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -27,28 +32,39 @@
                 </el-select>
               </template>
               <template v-else-if="item.type === 'datepicker'">
-                <el-date-picker style="width: 100%" v-bind="item.otherOptions"></el-date-picker>
+                <el-date-picker
+                  style="width: 100%"
+                  v-model="formData[`${item.field}`]"
+                  v-bind="item.otherOptions"
+                ></el-date-picker>
               </template>
             </el-form-item>
           </el-col>
         </template>
       </el-row>
     </el-form>
+    <div class="footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { ref, watch } from "vue"
 import { FormItem } from "../types"
 
 interface Props {
+  modelValue: any
   formItems: FormItem[]
   labelWidth?: string
   colLayout: any
   itemLayout: any
 }
 // vue3 暂时不支持引用外部的interface
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: () => ({}),
   formItems: () => [
     {
+      field: "",
       type: "input",
       label: "100"
     }
@@ -63,6 +79,21 @@ withDefaults(defineProps<Props>(), {
   }),
   itemLayout: () => ({ padding: "10px 20px" })
 })
+
+const formData = ref({ ...props.modelValue })
+
+const emit = defineEmits<{
+  (e: "update:modelValue", val: any): void
+}>()
+watch(
+  formData,
+  (newValue) => {
+    emit("update:modelValue", newValue)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 <style scoped lang="less">
 .search-form {
