@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .test {
+      background-color: red;
+      animation: flash .4s linear infinite;
+    }
+    @keyframes flash{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+  </style>
+</head>
+<body>
+
+  <div class="test"> 一闪一闪 </div>
+  <div class="test">aa</div>
+
+
+  <script>
+    let arr = [{id:1,key1: 1,key2:2},{id:2,key1: 1,key2:2},{id:3,key1: 1,key2:2}]
+    let obj = {}
+    arr.map((item,i) => {
+      console.log(i);
+      obj[i] = []
+      obj[i].push(Object.values(item))
+    })
+    console.log(obj);
+  </script>
+</body>
+</html>
